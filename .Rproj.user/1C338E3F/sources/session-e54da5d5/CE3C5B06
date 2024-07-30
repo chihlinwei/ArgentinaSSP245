@@ -1,26 +1,26 @@
 {
-    "id": "CDDF9100",
-    "path": "~/GitHub/ArgentinaSSP245/README.Rmd",
-    "project_path": "README.Rmd",
+    "id": "CE3C5B06",
+    "path": "~/GitHub/ArgentinaSSP245/tutorials/tute3.Rmd",
+    "project_path": "tutorials/tute3.Rmd",
     "type": "r_markdown",
-    "hash": "1848513870",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1722325945250.0,
+    "created": 1722324330304.0,
     "source_on_save": false,
     "relative_order": 7,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "23,0",
-        "scrollLine": "12"
+        "cursorPosition": "22,11",
+        "scrollLine": "0"
     },
     "folds": "",
-    "lastKnownWriteTime": 1722327020,
+    "lastKnownWriteTime": 1722324562,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1722327020518,
+    "last_content_update": 1722324562624,
     "read_only": false,
     "read_only_alternatives": []
 }
