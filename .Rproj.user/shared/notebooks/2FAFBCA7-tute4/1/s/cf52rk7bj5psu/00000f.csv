@@ -1,0 +1,89 @@
+"0","library(ArgentinaSSP126)"
+"2","載入需要的套件：raster
+"
+"2","載入需要的套件：sp
+"
+"0","library(ArgentinaSSP245)"
+"2","
+載入套件：‘ArgentinaSSP245’
+
+"
+"2","下列物件被遮斷自 ‘package:ArgentinaSSP126’:
+
+    cmip6_1950_2000_av, cmip6_1950_2000_cv, cmip6_1950_2000_sd, cmip6_1950_2000_voccAng, cmip6_1950_2000_voccMeg,
+    cmip6_2041_2060_av, cmip6_2041_2060_ch, cmip6_2041_2060_cv, cmip6_2041_2060_exsd, cmip6_2041_2060_sd,
+    cmip6_2041_2060_voccAng, cmip6_2041_2060_voccMeg, cmip6_2081_2100_av, cmip6_2081_2100_ch, cmip6_2081_2100_cv,
+    cmip6_2081_2100_exsd, cmip6_2081_2100_sd, cmip6_2081_2100_voccAng, cmip6_2081_2100_voccMeg,
+    cmip6_extoe_constant, cmip6_extoe_early, cmip6_sdtoe_constant, cmip6_sdtoe_early, jet.col.rev, jet.colors,
+    jet.colors2, jet.colors3, jet.colors4
+
+"
+"0","library(ArgentinaSSP585)"
+"2","
+載入套件：‘ArgentinaSSP585’
+
+"
+"2","下列物件被遮斷自 ‘package:ArgentinaSSP245’:
+
+    cmip6_2041_2060_av, cmip6_2041_2060_ch, cmip6_2041_2060_cv, cmip6_2041_2060_exsd, cmip6_2041_2060_sd,
+    cmip6_2041_2060_voccAng, cmip6_2041_2060_voccMeg, cmip6_2081_2100_av, cmip6_2081_2100_ch, cmip6_2081_2100_cv,
+    cmip6_2081_2100_exsd, cmip6_2081_2100_sd, cmip6_2081_2100_voccAng, cmip6_2081_2100_voccMeg,
+    cmip6_extoe_constant, cmip6_extoe_early, cmip6_sdtoe_constant, cmip6_sdtoe_early, jet.col.rev, jet.colors,
+    jet.colors2, jet.colors3, jet.colors4
+
+"
+"2","下列物件被遮斷自 ‘package:ArgentinaSSP126’:
+
+    cmip6_1950_2000_av, cmip6_1950_2000_cv, cmip6_1950_2000_sd, cmip6_1950_2000_voccAng, cmip6_1950_2000_voccMeg,
+    cmip6_2041_2060_av, cmip6_2041_2060_ch, cmip6_2041_2060_cv, cmip6_2041_2060_exsd, cmip6_2041_2060_sd,
+    cmip6_2041_2060_voccAng, cmip6_2041_2060_voccMeg, cmip6_2081_2100_av, cmip6_2081_2100_ch, cmip6_2081_2100_cv,
+    cmip6_2081_2100_exsd, cmip6_2081_2100_sd, cmip6_2081_2100_voccAng, cmip6_2081_2100_voccMeg,
+    cmip6_extoe_constant, cmip6_extoe_early, cmip6_sdtoe_constant, cmip6_sdtoe_early, jet.col.rev, jet.colors,
+    jet.colors2, jet.colors3, jet.colors4
+
+"
+"0","library(ggplot2)"
+"0","library(dplyr)"
+"2","
+載入套件：‘dplyr’
+
+"
+"2","下列物件被遮斷自 ‘package:raster’:
+
+    intersect, select, union
+
+"
+"2","下列物件被遮斷自 ‘package:stats’:
+
+    filter, lag
+
+"
+"2","下列物件被遮斷自 ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+"
+"0","library(patchwork)"
+"2","
+載入套件：‘patchwork’
+
+"
+"2","下列物件被遮斷自 ‘package:raster’:
+
+    area
+
+"
+"0","library(tidyr)"
+"2","
+載入套件：‘tidyr’
+
+"
+"2","下列物件被遮斷自 ‘package:raster’:
+
+    extract
+
+"
+"0","library(RColorBrewer)"
+"0","library(sf)"
+"2","Linking to GEOS 3.12.1, GDAL 3.8.4, PROJ 9.3.1; sf_use_s2() is TRUE
+"
