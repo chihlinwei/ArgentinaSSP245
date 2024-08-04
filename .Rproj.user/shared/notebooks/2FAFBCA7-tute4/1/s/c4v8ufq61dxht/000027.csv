@@ -1,4 +1,0 @@
-"0","plot_fun(r=overlay(overlay(t1, fun=max), overlay(t2, fun=max), fun=function(x, y) x-y),"
-"0","         vt=""Delta~Overall~ToE~(yr)"", "
-"0","         colours=jet.colors3(7) %>% rev"
-"0","         )"

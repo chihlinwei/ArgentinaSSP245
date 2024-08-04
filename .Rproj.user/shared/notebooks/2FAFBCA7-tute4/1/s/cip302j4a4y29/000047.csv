@@ -1,3 +1,0 @@
-"0","plot_fun(r=overlay(n1, n2, fun=function(x, y) (x-y)/y*100),"
-"0","         vt=expression(Delta~Cumulative~Negative~Impact~(""%""))"
-"0","         )"

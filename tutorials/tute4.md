@@ -1,7 +1,7 @@
-Model scenario comparison
+Model scenario comparisons
 ================
 Chih-Lin Wei
-2024-08-02
+2024-08-04
 
 ``` r
 library(ArgentinaSSP126)
@@ -17,9 +17,9 @@ library(sf)
 
 # Custom R functions
 
-We can use the same [ggplot](https://ggplot2.tidyverse.org/) wrap
-function to generate multi-panel plots. The custom plot function use the
-same four parameters, including:
+We use the same [ggplot](https://ggplot2.tidyverse.org/) wrap function
+to generate multi-panel plots. The custom plot function use the same
+four parameters, including:
 
 - r: A rasterbrick containing the data.
 - vt: A character vector of the new raster titles
@@ -31,7 +31,7 @@ same four parameters, including:
 plot_fun <- function(r, vt=names(r), colours=NULL, q_limits=c(0.001, 0.999)){
   
   # Convert raster to data frame and then to list
-  cmip6 <- as.data.frame(r, xy = TRUE) %>% na.omit %>%
+  cmip6 <- as.data.frame(r, xy = TRUE) %>%
   gather(-x, -y, key = "var", value = "value", factor_key = TRUE)
   cmip6$var <- factor(cmip6$var, labels = vt)
   cmip6_list <- cmip6 %>% group_split(var)
@@ -56,12 +56,12 @@ plot_fun <- function(r, vt=names(r), colours=NULL, q_limits=c(0.001, 0.999)){
       
     # Plot raster layer
     ggplot(dat) +
-      geom_raster(aes(x=x, y=y, fill=value))+
+      geom_raster(aes(x=x, y=y, fill=value), na.rm=TRUE)+
       geom_polygon(data=arg, aes(x=X, y=Y, group=PID), fill="bisque2", colour="transparent")+
       geom_sf(data=as(eez, "sf"), fill="transparent", colour="red")+
       geom_contour(data=bathy, aes(x=x, y=y, z=layer), breaks=-200, linetype=2, colour="gray50")+
       geom_contour(data=bathy, aes(x=x, y=y, z=layer), breaks=-4000, linetype=1, colour="gray50")+
-      scale_fill_gradientn(colours=cols, limits=lims)+
+      scale_fill_gradientn(colours=cols, limits=lims, na.value="white")+
       scale_x_continuous(expand = expansion(mult = 0))+
       scale_y_continuous(expand = expansion(mult = 0))+
       labs(x=NULL, y=NULL, fill=NULL, title=parse(text=dat$var[1] %>% as.character))+
@@ -74,23 +74,28 @@ plot_fun <- function(r, vt=names(r), colours=NULL, q_limits=c(0.001, 0.999)){
 }
 ```
 
-Another application involves calculating the cumulative impacts of
-climate change hazards. The negative hazards are caused by declining
-export POC flux, deoxygenation, ocean acidification, and ocean warming.
-The positive impacts are increasing export POC flux, oxygenation, ocean
-basification, and ocean cooling. Here, we use the same function to
-calculate cumulative negative and positive impacts caused by climate
-change hazards.
+# Negative impacts of climate change
+
+Here we only consider negative impacts of climate change hazards, which
+are caused by declining export POC flux, deoxygenation, ocean
+accidification, and ocean warming. This custom function essentially set
+increasing export POC flux, ocean oxygenation, ocean basification, and
+ocean cooling to NA.
 
 ``` r
 neg_imp <- function(r) {
   out <- addLayer(calc(subset(r, 1:3), fun=function(x){x[x>0]<-NA; return(-x)}),
                     calc(subset(r, 4), fun=function(x){x[x<0]<-NA; return(x)})
-                    ) %>%　overlay(fun=function(x)sum(x, na.rm=T))
-  names(out) <- c("Negative")
+                    )
+  names(out) <- c("epc", "o2", "ph", "thetao")
   return(out)
-} 
+}
 ```
+
+We first calculate the negative impacts of food shortfall,
+deoxygenation, accidification, and warming based on SSP126, SSP245, and
+SSP585. The unit is still the historical variability during 1951 to
+2000.
 
 ``` r
 n1 <- ArgentinaSSP126::cmip6_2041_2060_exsd %>% neg_imp
@@ -98,25 +103,71 @@ n2 <- ArgentinaSSP245::cmip6_2041_2060_exsd %>% neg_imp
 n5 <- ArgentinaSSP585::cmip6_2041_2060_exsd %>% neg_imp 
 ```
 
-# How much the SSP126 decrease cumulative negative impact over SSP245?
+We then sum up these negative impact to get the cumulative impacts of
+food shortfall, deoxygenation, accidification, and warming based on
+SSP126, SSP245, and SSP585.
 
 ``` r
-plot_fun(r=overlay(n1, n2, fun=function(x, y) (x-y)/y*100),
-         vt=expression(Delta~Cumulative~Negative~Impact~("%"))
-         )
+c1 <- overlay(n1, fun=function(x) sum(x, na.rm=T))
+c2 <- overlay(n2, fun=function(x) sum(x, na.rm=T))
+c5 <- overlay(n5, fun=function(x) sum(x, na.rm=T))
 ```
 
-![](tute4_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+## SSP126 minus SSP245
 
-# How much SSP585 worsen the cumulative negative impact over SSP245?
+First scenario comparison is conducted by subtracting negative impacts
+based on SSP245 from SSP126 and then standardized (or divided) by
+SSP245. This should tell us how much the SSP126 decreases the negative
+impacts of climate changes over SSP245.
 
 ``` r
-plot_fun(r=overlay(n5, n2, fun=function(x, y) (x-y)/y*100),
-         vt=expression(Delta~Cumulative~Negative~Impact~("%"))
-         )
+plot_fun(r=overlay(n1, n2, fun=function(x, y) (x-y)/y*100), 
+         vt = c(expression(Delta~Food~shortfall~impact~("%")), expression(Delta~Deoxygenation~impact~("%")), expression(Delta~Accidification~impact~("%")), expression(Delta~Warming~impact~("%"))),
+         q_limits = c(0, 0.96))
 ```
 
 ![](tute4_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+plot_fun(r=overlay(c1, c2, fun=function(x, y) (x-y)/y*100),
+         vt=expression(Delta~Cumulative~negative~impact~("%"))
+         )
+```
+
+![](tute4_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+## SSP585 minus SSP245
+
+Next, we subtract negative impacts based on SSP245 from SSP585 and then
+standardized (or divided) by SSP245. The output should tell us how much
+SSP585 increase the cumulative negative impact over SSP245.
+
+``` r
+r <- overlay(n5, n2, fun=function(x, y) (x-y)/y*100)
+# Limit the increase of food shortfall impact to 500 %
+r1 <- calc(subset(r, 1), fun=function(x){x[x>500] <- 500; return(x)})
+r <- addLayer(r1, subset(r, 2:4))
+
+plot_fun(r=r, 
+         vt = c(expression(Delta~Food~shortfall~impact~("%")), expression(Delta~Deoxygenation~impact~("%")), expression(Delta~Accidification~impact~("%")), expression(Delta~Warming~impact~("%"))),
+         q_limits = c(0, 1))
+```
+
+![](tute4_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+``` r
+plot_fun(r=overlay(c5, c2, fun=function(x, y) (x-y)/y*100),
+         vt=expression(Delta~Cumulative~negative~impact~("%"))
+         )
+```
+
+![](tute4_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+# Time of empergence of climate changes
+
+Again, we use time of emergence of climate changes (i.e., when climate
+changes exceed 2x historical variability) based on SSP126, SSP245, and
+SSP585.
 
 ``` r
 t1 <- subset(ArgentinaSSP126::cmip6_extoe_constant, 1:4)
@@ -124,7 +175,12 @@ t2 <- subset(ArgentinaSSP245::cmip6_extoe_constant, 1:4)
 t5 <- subset(ArgentinaSSP585::cmip6_extoe_constant, 1:4)
 ```
 
-# How much SSP126 delay ToE over SSP245?
+## SSP126 minus SSP245
+
+The scenario comparison use simple subtraction. For example, we subtract
+the time of emergence of climate changes based on SSP245 from SSP126.
+This will tell us in certain area (blue colors) SSP126 delay the onset
+of climate changes over SSP245.
 
 ``` r
 plot_fun(r=overlay(t1, t2, fun=function(x, y) x-y),
@@ -133,7 +189,7 @@ plot_fun(r=overlay(t1, t2, fun=function(x, y) x-y),
          )
 ```
 
-![](tute4_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](tute4_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
 
 ``` r
 plot_fun(r=overlay(overlay(t1, fun=max), overlay(t2, fun=max), fun=function(x, y) x-y),
@@ -142,9 +198,13 @@ plot_fun(r=overlay(overlay(t1, fun=max), overlay(t2, fun=max), fun=function(x, y
          )
 ```
 
-![](tute4_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](tute4_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
-# How much SSP585 advance ToE over SSP245?
+## SSP585 minus SSP245
+
+We can also subtract the time of emergence of climate changes based on
+SSP245 from SSP585. This will tell us in certain area (red colors)
+SSP585 advance the onset of climate changes over SSP245.
 
 ``` r
 plot_fun(r=overlay(t5, t2, fun=function(x, y) x-y),
@@ -153,7 +213,7 @@ plot_fun(r=overlay(t5, t2, fun=function(x, y) x-y),
          )
 ```
 
-![](tute4_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](tute4_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
 ``` r
 plot_fun(r=overlay(overlay(t5, fun=max), overlay(t2, fun=max), fun=function(x, y) x-y),
@@ -162,4 +222,99 @@ plot_fun(r=overlay(overlay(t5, fun=max), overlay(t2, fun=max), fun=function(x, y
          )
 ```
 
-![](tute4_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+![](tute4_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+# Habitat suitability
+
+We downloaded Demospongiae occurrence data from
+[OBIS](https://obis.org/area/7) using the
+[occurrence](https://www.rdocumentation.org/packages/robis/versions/2.11.3/topics/occurrence)
+function from the
+[robis](https://www.rdocumentation.org/packages/robis/versions/2.11.3)
+package. No. 7 is the area ID for Argentina.
+
+``` r
+library(robis)
+
+# Download OBIS data
+sponge <- occurrence(scientificname = "Demospongiae", areaid = 7)
+```
+
+## Environmental predictors
+
+We use annual average of the climate change projections from 1950 to
+2000 as historical scenario for species distribution model. The model
+predictions are based on annual average of the climate change
+projections from 2041 to 2060 based on SSP126, SSP245, and SSP585.
+Because water depth is usually the most critical factor controlling the
+species distribution in the deep sea, we also add the
+[etopo2022](https://www.ncei.noaa.gov/products/etopo-global-relief-model)
+global relief model into the predictors. The predictor names are
+modified (e.g., removing the years) to be consistent across historical
+and future scenarios for the convenience of modeling and predictions.
+
+``` r
+hist <- addLayer(etopo2022, ArgentinaSSP126::cmip6_1950_2000_av)
+names(hist)[-1] <- gsub("_av_1950_to_2000", "", names(cmip6_1950_2000_av))
+
+proj1 <- addLayer(etopo2022, ArgentinaSSP126::cmip6_2041_2060_av)
+names(proj1)[-1] <- gsub("_av_2041_2060", "", names(cmip6_2041_2060_av))
+
+proj2 <- addLayer(etopo2022, ArgentinaSSP245::cmip6_2041_2060_av)
+names(proj2)[-1] <- gsub("_av_2041_2060", "", names(cmip6_2041_2060_av))
+
+proj3 <- addLayer(etopo2022, ArgentinaSSP585::cmip6_2041_2060_av)
+names(proj3)[-1] <- gsub("_av_2041_2060", "", names(cmip6_2041_2060_av))
+```
+
+## Maxnet modeling
+
+For demonstration, we only apply the Demospongiae occurrence data for
+habitat suitability modeling using
+[Maxent](https://www.rdocumentation.org/packages/dismo/versions/1.3-14/topics/maxent)
+from the
+[dismo](https://www.rdocumentation.org/packages/dismo/versions/1.3-14)
+package. These sponge occurrences are modeled by the historical
+projection from 1950 to 2000 and then using the
+[Maxent](https://www.rdocumentation.org/packages/dismo/versions/1.3-14/topics/maxent)
+model to predict their habitat suitability in 2041 to 2060 based on
+SSP126, SSP245, and SSP585 scenarios.
+
+``` r
+library(dismo)
+library(doBy)
+
+loc <- sponge[, c("decimalLongitude", "decimalLatitude")]
+coordinates(loc) <- c("decimalLongitude", "decimalLatitude")
+me <-maxent(hist, loc)
+
+p1 <- predict(me, proj1)
+p2 <- predict(me, proj2)
+p3 <- predict(me, proj3)
+```
+
+## SSP126 minus SSP245
+
+SSP126 may increase sponge habitat suitability in some area (red color)
+over SSP245.
+
+``` r
+plot_fun(r=overlay(p1, p2, fun=function(x, y) (x-y)/y*100),
+         vt=expression(Delta~Habitat~Suitability~("%"))
+         )
+```
+
+![](tute4_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+
+## SSP585 minus SSP245
+
+SSP585 may decrease sponge habitat suitability in certain area (blue
+color) over SSP245.
+
+``` r
+plot_fun(r=overlay(p3, p2, fun=function(x, y) (x-y)/y*100),
+         vt=expression(Delta~Habitat~Suitability~("%"))
+         )
+```
+
+![](tute4_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
