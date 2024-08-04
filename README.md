@@ -1,7 +1,7 @@
 ---
 title: "Data package for seafloor climage change (ArgentinaSSP245)"
 author: "Chih-Lin Wei"
-date: "2024-07-30"
+date: "2024-08-04"
 output: 
   html_document: 
     smart: false
@@ -34,4 +34,6 @@ GNU Affero General Public License v3.0
 * [Display seafloor climate change data](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute1.md)
 * [Extract seafloor climate change data by polygon, polyline, or points](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute2.md)
 * [Applying seafloor climate change data for habitat suitability modeling](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute3.md)
+* [Model scenario comparisons](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute4.md)
+
 
