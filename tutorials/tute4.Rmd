@@ -25,6 +25,23 @@ library(tidyr)
 library(RColorBrewer)
 library(sf)
 ```
+# Shared Socioeconomic Pathways (SSP)
+
+In the context of the World Climate Research Programme's Coupled Model Intercomparison Project 6 (CMIP6), climate scientists have conducted simulations to predict climate change in the 21st century. These simulations were carried out based on the Shared Socioeconomic Pathways (SSP) scenarios for the Intergovernmental Panel on Climate Change's sixth assessment report (IPCC AR6) released in 2021. The purpose of the Shared Socioeconomic Pathways (SSP) scenarios is to enable comparison of climate simulations conducted by research institutes worldwide.
+
+The IPCC AR6 introduces five new SSP scenarios. For instance, SSP1 represents a sustainable and "green" pathway, envisioning a more environmentally sustainable world. SSP2 reflects a "middle of the road" or moderate pathway. SSP3 portrays national or regional conflicts as well as policies focusing increasingly on matters of national and regional security. SSP4 illustrates regional disparities in development, education, and environmental policy. SSP5 assumes a development path heavily reliant on fossil fuels.
+
+These SSPs are built upon their predecessors, the Representative Concentration Pathways (RCP), which were used for CMIP5. The RCPs delineated various levels of climate change and the extent of additional radiative forcing due to human-induced greenhouse gas emissions. The climate effects classes from RCP2.6, RCP4.5, RCP6.0, and RCP8.5 have been integrated into the SSPs, effectively combining the five socioeconomic pathways with different climate forcings. Below is a table from [IPCC (2021)](https://www.ipcc.ch/report/ar6/wg1/downloads/report/IPCC_AR6_WGI_SPM.pdf) demonstrating the Shared Socioeconomic Pathways (SSP) used in the IPCC Sixth Assessment Report (AR6).
+
+| SSP	      |Scenario                                                                                                                    | Estimated warming (2041–2060) |	Estimated warming (2081–2100)	| Very likely range of warming (2081–2100) |
+|-----------|----------------------------------------------------------------------------------------------------------------------------|-------------------------------|--------------------------------|------------------------------------------|
+| SSP1-1.9  | very low GHG emissions: CO2 emissions cut to net zero around 2050                                                          | 1.6 °C	                       | 1.4 °C                         | 1.0 – 1.8 °C                             |        
+| SSP1-2.6  | low GHG emissions: CO2 emissions cut to net zero around 2075.                                                              | 1.7 °C	                       | 1.8 °C	                        | 1.3 – 2.4 °C                             |        
+| SSP2-4.5  | intermediate GHG emissions: CO2 emissions around current levels until 2050, then falling but not reaching net zero by 2100 | 2.0 °C	                       | 2.7 °C	                        | 2.1 – 3.5 °C                             |
+| SSP3-7.0  | high GHG emissions: CO2 emissions double by 2100                                                                           | 2.1 °C	                       | 3.6 °C	                        | 2.8 – 4.6 °C                             |
+| SSP5-8.5  | very high GHG emissions: CO2 emissions double by 2075                                                                      | 2.4 °C	                       | 4.4 °C	                        | 3.3 – 5.7 °C                             |
+
+In this analysis, we compare three SSP scenarios, including SSP126 (SSP1-2.6), SSP245 (SSP2-4.5), and SSP585 (SSP5-8.5). First, we substrate SSP245 from SSP126 (i.e, SSP126 minus PPS245) to examine the potential improvement of sustainable pathway over the "meddle of the road" pathway for negative impact, time of emergence, and habitat suitability. Second, we substrate SSP245 from SSP585 (i.e, SSP585 minus PPS245) to examine the potential deterioration of "fossil-fueled Development" pathway over the "meddle of the road" pathway for negative impact, time of emergence, and habitat suitability.
 
 # Custom R functions
 
@@ -84,13 +101,12 @@ plot_fun <- function(r, vt=names(r), colours=NULL, q_limits=c(0.001, 0.999)){
 
 # Negative impacts of climate change
 
-Here we only consider negative impacts of climate change hazards, which are caused by declining export POC flux, deoxygenation, ocean accidification, and ocean warming. This custom function essentially set increasing export POC flux, ocean oxygenation, ocean basification, and ocean cooling to NA.
+We are only focusing on the negative effects of climate change hazards. These are caused by the decreasing export POC flux, deoxygenation, ocean acidification, and ocean warming. This custom function essentially sets increasing export POC flux, ocean oxygenation, ocean basification, and ocean cooling to NA.
 
 ```{r}
 neg_imp <- function(r) {
   out <- addLayer(calc(subset(r, 1:3), fun=function(x){x[x>0]<-NA; return(-x)}),
-                    calc(subset(r, 4), fun=function(x){x[x<0]<-NA; return(x)})
-                    )
+                    calc(subset(r, 4), fun=function(x){x[x<0]<-NA; return(x)}) )
   names(out) <- c("epc", "o2", "ph", "thetao")
   return(out)
 }
@@ -114,7 +130,7 @@ c5 <- overlay(n5, fun=function(x) sum(x, na.rm=T))
 
 ## SSP126 minus SSP245
 
-First scenario comparison is conducted by subtracting negative impacts based on SSP245 from SSP126 and then standardized (or divided) by SSP245. This should tell us how much the SSP126 decreases the  negative impacts of climate changes over SSP245.
+Comparison of scenarios involves subtracting negative impacts based on SSP245 from SSP126, then standardizing the result by dividing it by SSP245. This process indicates how much SSP126 reduces the negative impacts of climate changes compared to SSP245.
 
 ```{r, fig.width=11, fig.height=5}
 plot_fun(r=overlay(n1, n2, fun=function(x, y) (x-y)/y*100), 
@@ -130,7 +146,7 @@ plot_fun(r=overlay(c1, c2, fun=function(x, y) (x-y)/y*100),
 
 ## SSP585 minus SSP245
 
-Next, we subtract negative impacts based on SSP245 from SSP585 and then standardized (or divided) by SSP245. The output should tell us how much SSP585 increase the cumulative negative impact over SSP245.
+Next, we subtract the negative impacts attributed to SSP245 from those of SSP585, and then standardize the result by dividing it by SSP245. The output will indicate the extent to which SSP585 increases the negative impact over SSP245.
 
 ```{r, fig.width=11, fig.height=5}
 r <- overlay(n5, n2, fun=function(x, y) (x-y)/y*100)
@@ -161,7 +177,7 @@ t5 <- subset(ArgentinaSSP585::cmip6_extoe_constant, 1:4)
 
 ## SSP126 minus SSP245
 
-The scenario comparison use simple subtraction. For example, we subtract the time of emergence of climate changes based on SSP245 from SSP126. This will tell us in certain area (blue colors) SSP126 delay the onset of climate changes over SSP245. 
+The scenario comparison uses simple subtraction. For instance, we subtract the time of emergence of climate changes based on SSP245 from SSP126. This will indicate that in specific areas (blue colors), SSP126 delays the onset of climate changes compared to SSP245.
 
 ```{r, fig.width=11, fig.height=5}
 plot_fun(r=overlay(t1, t2, fun=function(x, y) x-y),
@@ -179,7 +195,7 @@ plot_fun(r=overlay(overlay(t1, fun=max), overlay(t2, fun=max), fun=function(x, y
 
 ## SSP585 minus SSP245
 
-We can also subtract the time of emergence of climate changes based on SSP245 from SSP585. This will tell us in certain area (red colors) SSP585 advance the onset of climate changes over SSP245. 
+We can calculate the time difference of climate change onset between SSP245 and SSP585. This will indicate how much earlier climate changes occur in specific areas (indicated by red colors) for SSP585 compared to SSP245. 
 
 ```{r, fig.width=11, fig.height=5}
 plot_fun(r=overlay(t5, t2, fun=function(x, y) x-y),
@@ -197,7 +213,7 @@ plot_fun(r=overlay(overlay(t5, fun=max), overlay(t2, fun=max), fun=function(x, y
 
 # Habitat suitability
 
-We downloaded Demospongiae occurrence data from [OBIS](https://obis.org/area/7) using the [occurrence](https://www.rdocumentation.org/packages/robis/versions/2.11.3/topics/occurrence) function from the [robis](https://www.rdocumentation.org/packages/robis/versions/2.11.3) package. No. 7 is the area ID for Argentina.
+We download Demospongiae occurrence data from [OBIS](https://obis.org/area/7) using the [occurrence](https://www.rdocumentation.org/packages/robis/versions/2.11.3/topics/occurrence) function from the [robis](https://www.rdocumentation.org/packages/robis/versions/2.11.3) package. No. 7 is the area ID for Argentina.
 
 ```{r}
 library(robis)
@@ -208,7 +224,7 @@ sponge <- occurrence(scientificname = "Demospongiae", areaid = 7)
 
 ## Environmental predictors
 
-We use annual average of the climate change projections from 1950 to 2000 as historical scenario for species distribution model. The model predictions are based on annual average of the climate change projections from 2041 to 2060 based on SSP126, SSP245, and SSP585. Because water depth is usually the most critical factor controlling the species distribution in the deep sea, we also add the [etopo2022](https://www.ncei.noaa.gov/products/etopo-global-relief-model) global relief model into the predictors. The predictor names are modified (e.g., removing the years) to be consistent across historical and future scenarios for the convenience of modeling and predictions.
+We will use the average annual climate change projections from 1950 to 2000 as the historical scenario for the species distribution model. The model predictions will be based on the average annual climate change projections from 2041 to 2060, utilizing SSP126, SSP245, and SSP585. Given that water depth is a major factor influencing species distribution in the deep sea, we will also incorporate the [etopo2022](https://www.ncei.noaa.gov/products/etopo-global-relief-model) global relief model as part of our predictors. To ensure consistency in modeling and predictions, we have modified the predictor names, including removing specific years, across historical and future scenarios.
 
 ```{r}
 hist <- addLayer(etopo2022, ArgentinaSSP126::cmip6_1950_2000_av)
@@ -226,7 +242,7 @@ names(proj3)[-1] <- gsub("_av_2041_2060", "", names(cmip6_2041_2060_av))
 
 ## Maxnet modeling
 
-For demonstration, we only apply the Demospongiae occurrence data for habitat suitability modeling using [Maxent](https://www.rdocumentation.org/packages/dismo/versions/1.3-14/topics/maxent) from the [dismo](https://www.rdocumentation.org/packages/dismo/versions/1.3-14) package. These sponge occurrences are modeled by the historical projection from 1950 to 2000 and then using the [Maxent](https://www.rdocumentation.org/packages/dismo/versions/1.3-14/topics/maxent) model to predict their habitat suitability in 2041 to 2060 based on SSP126, SSP245, and SSP585 scenarios. 
+To demonstrate, we are using the Demospongiae occurrence data for habitat suitability modeling with Maxent from the dismo package. These sponge occurrences are modeled using historical projection data from 1950 to 2000. Subsequently, the Maxent model is utilized to predict their habitat suitability from 2041 to 2060 based on scenarios such as SSP126, SSP245, and SSP585.
 
 ```{r}
 library(dismo)
@@ -243,7 +259,7 @@ p3 <- predict(me, proj3)
 
 ## SSP126 minus SSP245
 
-SSP126 may increase sponge habitat suitability in some area (red color) over SSP245.
+SSP126 may increase sponge habitat suitability in some area (red color) compared to SSP245.
 
 ```{r, fig.width=4, fig.height=7}
 plot_fun(r=overlay(p1, p2, fun=function(x, y) (x-y)/y*100),
@@ -253,7 +269,7 @@ plot_fun(r=overlay(p1, p2, fun=function(x, y) (x-y)/y*100),
 
 ## SSP585 minus SSP245
 
-SSP585 may decrease sponge habitat suitability in certain area (blue color) over SSP245.
+SSP585 may decrease sponge habitat suitability in certain area (blue color) compared to SSP245.
 
 ```{r, fig.width=4, fig.height=7}
 plot_fun(r=overlay(p3, p2, fun=function(x, y) (x-y)/y*100),
