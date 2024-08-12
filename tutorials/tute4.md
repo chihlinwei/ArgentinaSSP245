@@ -1,7 +1,7 @@
 Model scenario comparisons
 ================
 Chih-Lin Wei
-2024-08-08
+2024-08-12
 
 ``` r
 library(ArgentinaSSP126)
@@ -366,3 +366,17 @@ plot_fun(r=overlay(p3, p2, fun=function(x, y) (x-y)/y*100),
 ```
 
 ![](tute4_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+# Excercises
+
+- Display how much SSP126 reduces the negative impacts of climate
+  changes compared to SSP245 from 2081 to 2100.
+
+- Display the extent to which SSP585 increases the negative impact over
+  SSP245 from 2081 to 2100.
+
+- Display how much SSP126 may increase sponge habitat suitability
+  compared to SSP245 from 2081 to 2100.
+
+- Display how much SSP585 may decrease sponge habitat suitability
+  compared to SSP245 from 2081 to 2100.
