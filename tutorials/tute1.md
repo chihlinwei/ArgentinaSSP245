@@ -1,7 +1,7 @@
 Display seafloor climate change data
 ================
 Chih-Lin Wei
-2024-08-12
+2024-08-13
 
 ``` r
 library(ArgentinaSSP245)
@@ -380,26 +380,25 @@ plot_fun(r=cmip6_2041_2060_voccMeg %>% cum_imp,
 
 # Excercises
 
-- Display the average seafloor climate projections of export POC flux
+- Show the average projections for seafloor climate variables including
+  export POC flux (epc), dissolved oxygen concentration (o2), pH values
+  (ph), and potential temperature (thetao) from 2081 to 2100.
+
+- Display the average seafloor climate changes for export POC flux
   (epc), dissolved oxygen concentration (o2), pH values (ph), and
-  potential temperature (thetao) from 2081 to 2100.
+  potential temperature (thetao) between 1950 to 2000 and 2081 to 2100.
 
-- Display the average seafloor climate changes of export POC flux (epc),
-  dissolved oxygen concentration (o2), pH values (ph), and potential
-  temperature (thetao) between 1950 to 2000 and 2081 to 2100.
-
-- Display the average climate change hazards of export POC flux (epc),
+- Show the average climate change hazards for export POC flux (epc),
   dissolved oxygen concentration (o2), pH values (ph), and potential
   temperature (thetao) from 2081 to 2100.
 
-- Display the cumulative impacts based on climate change hazards (or
-  impacts) of export POC flux (epc), dissolved oxygen concentration
-  (o2), pH values (ph), and potential temperature (thetao) from 2081 to
-  2100.
+- Display the cumulative impacts of climate change hazards for export
+  POC flux (epc), dissolved oxygen concentration (o2), pH values (ph),
+  and potential temperature (thetao) from 2081 to 2100.
 
-- Display the average seafloor gradient-based climate velocity
-  magnitudes from 2081 to 2100.
+- Show the average seafloor gradient-based climate velocity magnitudes
+  from 2081 to 2100.
 
-- Display the cumulative impacts based climate velocity magnitudes of
+- Display the cumulative impacts of climate velocity magnitudes for
   export POC flux (epc), dissolved oxygen concentration (o2), pH values
   (ph), and potential temperature (thetao) from 2081 to 2100.
