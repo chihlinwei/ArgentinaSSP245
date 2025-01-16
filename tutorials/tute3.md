@@ -1,7 +1,7 @@
 Applying seafloor climate change data for habitat suitability modeling
 ================
 Chih-Lin Wei
-2024-08-04
+2024-08-13
 
 ``` r
 library(ArgentinaSSP245)
@@ -42,7 +42,7 @@ occ <- rbind(hake[, c(6:7, 21)] %>% cbind(Taxa="Argentine hake"),
              shrimp[, c(6:7, 21)] %>% cbind(Taxa="Argentina red shrimp"), 
              crab[, c(6:7, 21)] %>% cbind(Taxa="Chilean king crab"), 
              skate[, c(6:7, 21)] %>% cbind(Taxa="Shortfin sand skate"), 
-             sponge[, c(2:3, 6)] %>% cbind(Taxa="Demosponge"), 
+             sponge[, c(6:7, 16)] %>% cbind(Taxa="Demosponge"), 
              cwc %>% cbind(Taxa="Coldwater coral")
              )
 ```
@@ -205,3 +205,13 @@ ggplot(dat) +
 ```
 
 ![](tute3_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+
+# Excercises
+
+- Download the occurrence data for Southwest Atlantic butterfish
+  (Stromateus brasiliensis) and Longtail southern cod (Patagonotothen
+  ramsayi) from OBIS, and display them on maps.
+
+- Construct species distribution models using historical data from 1950
+  to 2000 with Maxent. Then, predict and map the historical and future
+  species habitat suitability from 2041 to 2060 and from 2081 to 2100.

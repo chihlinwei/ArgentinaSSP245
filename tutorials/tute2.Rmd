@@ -274,3 +274,7 @@ ggplot(data=out)+
   facet_wrap(~var, scales="free", labeller=label_parsed)+
   labs(y="Cumulative Climate Change Impact")
 ```
+
+# Excercises
+
+* Display climate change hazards, cumulative impacts, and climate velocity magnitudes from 2081 to 2100 for Argentina's Exclusive Economic Zone (EEZ), submarine canyons, seamounts, and cold water corals.

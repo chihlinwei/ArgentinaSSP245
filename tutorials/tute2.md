@@ -1,7 +1,7 @@
 Extract seafloor climate change data by polygon, polyline, or points
 ================
 Chih-Lin Wei
-2024-08-04
+2024-08-13
 
 ``` r
 library(ArgentinaSSP245)
@@ -349,3 +349,10 @@ ggplot(data=out)+
 ```
 
 ![](tute2_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+
+# Excercises
+
+- Display climate change hazards, cumulative impacts, and climate
+  velocity magnitudes from 2081 to 2100 for Argentina’s Exclusive
+  Economic Zone (EEZ), submarine canyons, seamounts, and cold water
+  corals.

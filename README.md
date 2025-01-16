@@ -1,7 +1,7 @@
 ---
 title: "Data package for seafloor climage change (ArgentinaSSP245)"
 author: "Chih-Lin Wei"
-date: "2024-08-04"
+date: "2024-08-14"
 output: 
   html_document: 
     smart: false
@@ -36,4 +36,7 @@ GNU Affero General Public License v3.0
 * [Applying seafloor climate change data for habitat suitability modeling](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute3.md)
 * [Model scenario comparisons](https://github.com/chihlinwei/ArgentinaSSP245/blob/main/tutorials/tute4.md)
 
+### Citation
+
+Chih-Lin Wei. (2024). chihlinwei/ArgentinaSSP245: Data package for seafloor climage change (ArgentinaSSP245) (v1.0.0). Zenodo. https://doi.org/10.5281/zenodo.13319179
 

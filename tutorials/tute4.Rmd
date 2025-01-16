@@ -276,3 +276,14 @@ plot_fun(r=overlay(p3, p2, fun=function(x, y) (x-y)/y*100),
          vt=expression(Delta~Habitat~Suitability~("%"))
          )
 ```
+
+# Excercises
+
+* Compare and display the reduction in negative impacts of climate change for SSP126 versus SSP245 from 2081 to 2100.
+
+* Compare and display the increase in negative impacts of climate change for SSP585 versus SSP245 from 2081 to 2100.
+
+* Compare and display the potential increase in sponge habitat suitability for SSP126 versus SSP245 from 2081 to 2100.
+
+* Compare and display the potential decrease in sponge habitat suitability for SSP126 versus SSP245 from 2081 to 2100.
+
